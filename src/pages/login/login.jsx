@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button } from 'antd'
+import { Form, Icon, Input, Button, message } from 'antd'
 import './login.less'
 import logo from './images/logo.png'
+import { reqLogin } from '../../api'
 
 /**
  * 登录的路由组件
@@ -16,11 +17,20 @@ class Login extends Component {
     handleSubmit = e => {
         e.preventDefault();
         // 得到form对象
-        const { form } = this.props
+        const { form, history } = this.props
         // 获取表单项的输入数据
-        form.validateFields((err, values) => {
+        form.validateFields(async (err, values) => {
             if (!err) {
-                console.log(values)
+                const res = await reqLogin(values)
+                const { status, data, msg } = res.data
+                if (msg) {
+                    message.error(msg)
+                } else {
+                    message.success('登陆成功')
+                    
+                    // 跳转到管理界面
+                    history.replace('/admin')
+                }
             }
         })
 
@@ -69,7 +79,9 @@ class Login extends Component {
                                         }, {
                                             pattern: /^[a-zA-Z0-9]+$/,
                                             message: '用户名必须是英文、数字或下划线'
-                                        }]
+                                        }],
+                                        // 指定初始值
+                                        initialValue: 'admin'
                                     })(
                                         <Input
                                             prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
