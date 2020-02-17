@@ -1,0 +1,9 @@
+###
+POST http://localhost:3001/manage/category/add HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+categoryName=a1
+&parentId=5e491ce9a382fd3980767bca
+
+###
+GET http://localhost:3001/manage/category/list HTTP/1.1

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Form, Icon, Input, Button, message } from 'antd'
-import './login.less'
-import logo from './images/logo.png'
+import logo from '../../asserts/images/logo.png'
 import { reqLogin } from '../../api'
+import { dealUser } from '../../utils/storageUtils';
 
 /**
  * 登录的路由组件
@@ -14,6 +14,13 @@ class Login extends Component {
         }
     }
 
+    componentDidMount() {
+        const user = dealUser.getUser()
+        if (Object.keys(user).length) {
+            this.props.history.replace('/')
+        }
+    }
+
     handleSubmit = e => {
         e.preventDefault();
         // 得到form对象
@@ -22,14 +29,20 @@ class Login extends Component {
         form.validateFields(async (err, values) => {
             if (!err) {
                 const res = await reqLogin(values)
-                const { status, data, msg } = res.data
-                if (msg) {
-                    message.error(msg)
+                if (typeof res === 'object') {
+                    const { data, msg } = res.data
+                    if (msg) {
+                        message.error(msg)
+                    } else {
+                        message.success('登陆成功')
+                        dealUser.saveUser(data)
+                        // 保存用户数据
+
+                        // 跳转到管理界面
+                        history.replace('/admin')
+                    }
                 } else {
-                    message.success('登陆成功')
-                    
-                    // 跳转到管理界面
-                    history.replace('/admin')
+                    message.error("可能是后台服务问题",res)
                 }
             }
         })
