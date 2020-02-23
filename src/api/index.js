@@ -47,10 +47,55 @@ const reqUpdateCategorys = ({ categoryId, categoryName }) => {
     return axios.post('/manage/category/update', { categoryId, categoryName })
 }
 
+// 获取商品分页列表
+const reqProducts = ({ pageNum, pageSize }) => {
+    return axios.get('/manage/product/list', {
+        params: {
+            pageNum,
+            pageSize
+        }
+    })
+}
+
+/**
+ * 搜索商品分页列表
+ */
+const reqSearchProducts = ({ pageNum, pageSize, searchName, searchType }) => {
+    return axios.get('/manage/product/search', {
+        params: {
+            pageNum,
+            pageSize,
+            [searchType]: searchName
+        }
+    })
+}
+
+/**
+ * 获取一个分类
+ */
+const reqCategory = (categoryId) => {
+    return axios.get('/manage/category/info', {
+        params: {
+            categoryId
+        }
+    })
+}
+
+/**
+ * 更新商品的状态（上架/下架）
+ */
+const reqUpdateStatus = (productId, status) => {
+    return axios.post('/manage/product/updateStatus', { productId, status })
+}
+
 export {
     reqLogin,
     reqAddUser,
     reqCategorys,
     reqAddCategorys,
-    reqUpdateCategorys
+    reqUpdateCategorys,
+    reqProducts,
+    reqSearchProducts,
+    reqCategory,
+    reqUpdateStatus
 }
