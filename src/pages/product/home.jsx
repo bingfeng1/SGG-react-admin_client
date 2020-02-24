@@ -61,7 +61,13 @@ class ProductHome extends Component {
                                 onClick={
                                     () => this.props.history.push('/product/detail', product)
                                 }>详情</Button>
-                            <Button type="link">修改</Button>
+                            <Button
+                                type="link"
+                                onClick={
+                                    () => this.props.history.push('/product/addupdate', product)
+                                }>
+                                修改
+                                </Button>
                         </div>
                     )
                 }
