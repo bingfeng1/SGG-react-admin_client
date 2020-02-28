@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Card, Form, Input, Cascader, Upload, Button, Icon } from 'antd';
-import { reqCategorys } from '../../api';
+import { Card, Form, Input, Cascader, Button, Icon, message } from 'antd';
+import { reqCategorys, reqAddOrUpdateProduct } from '../../api';
+import PicturesWall from './pictures-wall';
+import RichTextEditor from './rich-text-editor';
 
 const { Item } = Form
 const { TextArea } = Input
@@ -12,6 +14,10 @@ class ProductAddUpdate extends Component {
             options: []
         }
         this.judgeAddUpdate()
+
+        // 创建用来保存ref表示的标签对象容器
+        this.pw = React.createRef()
+        this.editor = React.createRef()
     }
 
     componentDidMount() {
@@ -28,9 +34,47 @@ class ProductAddUpdate extends Component {
 
     submit = () => {
         // 进行表单验证，如果通过了，才发送请求
-        this.props.form.validateFields((err, values) => {
+        this.props.form.validateFields(async (err, values) => {
             if (!err) {
-                console.log('发送ajax请求', values)
+                // 收集数据,并封装成product对象
+                const { name, desc, price, categoryIds } = values
+                let pCategoryId, categoryId;
+                if (categoryIds.length === 1) {
+                    pCategoryId = '0'
+                    categoryId = categoryIds[0]
+                } else {
+                    pCategoryId = categoryIds[0]
+                    categoryId = categoryIds[1]
+                }
+                const imgs = this.pw.current.getImgs()
+                const detail = this.editor.current.getDetail()
+                const product = {
+                    name,
+                    desc,
+                    price,
+                    imgs,
+                    detail,
+                    pCategoryId,
+                    categoryId
+                }
+
+                // 如果是更新，需要添加_id
+                if (this.isUpdate) {
+                    product._id = this.product._id
+                }
+
+                // 调用接口请求函数去添加/更新
+                const { data } = await reqAddOrUpdateProduct(product)
+
+                // 根据结果提示
+                if(data.status ===0){
+                    message.success(`${this.isUpdate?'更新':'添加'}商品成功`)
+                    this.props.history.goBack()
+                }else{
+                    message.error(`${this.isUpdate?'更新':'添加'}商品失败`)
+                }
+
+
             }
         })
     }
@@ -75,7 +119,7 @@ class ProductAddUpdate extends Component {
         }))
 
         const { isUpdate, product } = this;
-        const { pCategoryId, categoryId } = product
+        const { pCategoryId } = product
 
         if (isUpdate && pCategoryId !== '0') {
             // 商品是二级分类商品
@@ -130,7 +174,7 @@ class ProductAddUpdate extends Component {
 
     render() {
         const { isUpdate, product } = this;
-        const { name, desc, price, pCategoryId, categoryId } = product
+        const { name, desc, price, pCategoryId, categoryId, imgs, detail } = product
         let categoryIds;
         if (isUpdate) {
             // 商品是一级分类商品
@@ -234,11 +278,11 @@ class ProductAddUpdate extends Component {
                     </Item>
                     <Item
                         label="商品图片">
-                        <div>商品图片</div>
+                        <PicturesWall ref={this.pw} imgs={imgs}></PicturesWall>
                     </Item>
                     <Item
-                        label="商品详情">
-                        <div>商品详情</div>
+                        label="商品详情" labelCol={{ span: 3 }} wrapperCol={{ span: 20 }}>
+                        <RichTextEditor ref={this.editor} detail={detail} />
                     </Item>
                     <Item>
                         <Button type="primary" onClick={this.submit}>提交</Button>

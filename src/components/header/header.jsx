@@ -43,7 +43,7 @@ class MyHeader extends Component {
                 title = item.title
                 return title;
             } else if (item.children) {
-                const cItem = item.children.find(cItem => cItem.key === path)
+                const cItem = item.children.find(cItem => path.indexOf(cItem.key) === 0)
                 if (cItem) {
                     title = cItem.title
                     return title;

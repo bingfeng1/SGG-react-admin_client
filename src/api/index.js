@@ -88,6 +88,24 @@ const reqUpdateStatus = (productId, status) => {
     return axios.post('/manage/product/updateStatus', { productId, status })
 }
 
+/**
+ * 删除指定名称的图片
+ */
+const reqDeleteImg = (name) => {
+    return axios.post('/manage/img/delete', { name })
+}
+
+/**
+ * 添加商品/修改商品
+ */
+const reqAddOrUpdateProduct = (product) => {
+    let addorupdate = product._id ? 'update' : 'add'
+
+    return axios.post(`/manage/product/${addorupdate}`, product)
+}
+
+
+
 export {
     reqLogin,
     reqAddUser,
@@ -97,5 +115,7 @@ export {
     reqProducts,
     reqSearchProducts,
     reqCategory,
-    reqUpdateStatus
+    reqUpdateStatus,
+    reqDeleteImg,
+    reqAddOrUpdateProduct
 }

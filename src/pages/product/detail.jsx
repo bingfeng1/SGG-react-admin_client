@@ -6,6 +6,7 @@ import {
     Button
 } from 'antd'
 import { reqCategory } from '../../api';
+import { BASE_IMG_URL } from '../../utils/constants';
 
 const { Item } = List
 
@@ -88,7 +89,7 @@ class ProductDetail extends Component {
                                     imgs.map(img => (
                                         <img
                                             key={img}
-                                            src={img}
+                                            src={`${BASE_IMG_URL}${img}`}
                                             alt={img}
                                         />
                                     ))
