@@ -104,7 +104,20 @@ const reqAddOrUpdateProduct = (product) => {
     return axios.post(`/manage/product/${addorupdate}`, product)
 }
 
+// 获取所有角色的列表
+const reqRoles = () => {
+    return axios.get('/manage/role/list')
+}
 
+// 添加角色的列表
+const reqAddRole = (roleName) => {
+    return axios.post('/manage/role/add', { roleName })
+}
+
+// 更新角色的列表
+const reqUpdateRole = (role) => {
+    return axios.post('/manage/role/update', role)
+}
 
 export {
     reqLogin,
@@ -117,5 +130,8 @@ export {
     reqCategory,
     reqUpdateStatus,
     reqDeleteImg,
-    reqAddOrUpdateProduct
+    reqAddOrUpdateProduct,
+    reqRoles,
+    reqAddRole,
+    reqUpdateRole
 }
