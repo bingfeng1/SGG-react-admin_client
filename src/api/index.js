@@ -119,6 +119,11 @@ const reqUpdateRole = (role) => {
     return axios.post('/manage/role/update', role)
 }
 
+// 获取所有用户列表
+const reqUsers = () => {
+    return axios.get('/manage/user/list')
+}
+
 export {
     reqLogin,
     reqAddUser,
@@ -133,5 +138,6 @@ export {
     reqAddOrUpdateProduct,
     reqRoles,
     reqAddRole,
-    reqUpdateRole
+    reqUpdateRole,
+    reqUsers
 }
