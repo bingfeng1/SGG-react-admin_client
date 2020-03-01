@@ -16,10 +16,8 @@ const reqLogin = ({ username, password }) => {
  * 增加用户接口 POST
  * @param {Object} user 
  */
-const reqAddUser = (user) => {
-    return axios.post('/manager/user/add', {
-        data: user
-    })
+const reqAddOrUpdateUser = (user) => {
+    return axios.post(`/manage/user/${user._id ? 'update' : 'add'}`, user)
 }
 
 /**
@@ -124,9 +122,14 @@ const reqUsers = () => {
     return axios.get('/manage/user/list')
 }
 
+// 删除指定用户
+const reqDeleteUser = (userId) => {
+    return axios.post('/manage/user/delete', { userId })
+}
+
 export {
     reqLogin,
-    reqAddUser,
+    reqAddOrUpdateUser,
     reqCategorys,
     reqAddCategorys,
     reqUpdateCategorys,
@@ -139,5 +142,6 @@ export {
     reqRoles,
     reqAddRole,
     reqUpdateRole,
-    reqUsers
+    reqUsers,
+    reqDeleteUser
 }
