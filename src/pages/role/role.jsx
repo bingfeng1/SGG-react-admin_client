@@ -112,6 +112,13 @@ class Role extends Component {
         if (data.status === 0) {
             message.success('更新权限成功')
             
+            // 如果当前更新的是自己角色的权限，强制退出
+            if(role._id===dealUser.getUser().role_id){
+                message.success('当前角色圈钱修改，请重新登录')
+                dealUser.removeUser()
+                this.props.history.replace('/login')
+            }
+
             this.setState({
                 roles:[...this.state.roles],
                 isShowAuth:false,
